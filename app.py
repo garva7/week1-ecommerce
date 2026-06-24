@@ -1,15 +1,3 @@
-"""ShopEasy - Flask application (Week 3).
-
-Routes:
-  /                 home page (categories from the database)
-  /products         product listing, optional ?category=Men filter
-  /product/<id>     single product detail (discount + stock)
-  /about            about page
-  /register         create an account (INSERT into users, hashed password)
-  /login            log in (fetch user, check hashed password, start session)
-  /logout           end the session
-"""
-
 from flask import (
     Flask, render_template, request, redirect, url_for, session, flash, jsonify
 )
