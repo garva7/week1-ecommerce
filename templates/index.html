@@ -7,8 +7,9 @@
         <h1 class="fw-bold">Welcome to ShopEasy</h1>
         <p class="lead text-muted mb-4">Affordable, everyday clothing for Men, Women and Kids.</p>
         <a href="{{ url_for('products') }}" class="btn btn-dark btn-lg me-2">Shop Now</a>
-        <button type="button" class="btn btn-outline-dark btn-lg" data-bs-toggle="modal" data-bs-target="#offerModal">
-            Get 10% Off
+        <button type="button" class="btn btn-outline-dark btn-lg"
+                data-bs-toggle="modal" data-bs-target="#enquiryModal">
+            Contact Us
         </button>
     </div>
 </section>
@@ -23,7 +24,8 @@
                 <div class="card-body">
                     <h3 class="h5 card-title">{{ category.name }}</h3>
                     <p class="card-text text-muted">{{ category.description }}</p>
-                    <a href="{{ url_for('products', category=category.name) }}" class="btn btn-outline-dark btn-sm">View Products</a>
+                    <a href="{{ url_for('products', category=category.name) }}"
+                       class="btn btn-outline-dark btn-sm">View Products</a>
                 </div>
             </div>
         </div>
@@ -31,24 +33,71 @@
     </div>
 </section>
 
-<!-- Offer Modal (Bootstrap component) -->
-<div class="modal fade" id="offerModal" tabindex="-1" aria-labelledby="offerModalLabel" aria-hidden="true">
+<!-- Enquiry Modal -->
+<div class="modal fade" id="enquiryModal" tabindex="-1"
+     aria-labelledby="enquiryModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="offerModalLabel">Get 10% Off Your First Order</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="enquiryModalLabel">Send an Enquiry</h5>
+                <button type="button" class="btn-close"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p class="text-muted">Sign up with your email and get a 10% discount on your first purchase.</p>
-                <label for="offer-email" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="offer-email" placeholder="you@example.com">
+
+                <!-- Success / error alert shown by JS after AJAX -->
+                <div id="enquiry-alert" class="d-none"></div>
+
+                <form id="enquiry-form" novalidate>
+                    <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        <input type="text" id="enq-name" name="name" class="form-control"
+                               placeholder="Your full name">
+                        <div class="invalid-feedback" id="err-name"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="enq-email" name="email" class="form-control"
+                               placeholder="you@example.com">
+                        <div class="invalid-feedback" id="err-email"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Phone</label>
+                        <input type="text" id="enq-phone" name="phone" class="form-control"
+                               placeholder="10-digit phone number">
+                        <div class="invalid-feedback" id="err-phone"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Type</label>
+                        <select id="enq-type" name="type" class="form-select">
+                            <option value="">-- Select Type --</option>
+                            <option value="general">General</option>
+                            <option value="order">Order Related</option>
+                            <option value="return">Return / Refund</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <div class="invalid-feedback" id="err-type"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea id="enq-description" name="description"
+                                  class="form-control" rows="3"
+                                  placeholder="Describe your enquiry..."></textarea>
+                        <div class="invalid-feedback" id="err-description"></div>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Sign Up</button>
+                <button type="button" class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-dark"
+                        id="enquiry-submit">Submit</button>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='enquiry.js') }}"></script>
 {% endblock %}

@@ -56,3 +56,14 @@ class Product(db.Model):
 
     # Lets us write product.category to get the Category object.
     category = db.relationship("Category", backref="products")
+
+class Enquiry(db.Model):
+    __tablename__ = "enquiries"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    type = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)

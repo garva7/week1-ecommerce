@@ -1,0 +1,41 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}{{ action }} Subcategory{% endblock %}
+
+{% block content %}
+<h1 class="h3 mb-4">{{ action }} Subcategory</h1>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" name="name" class="form-control"
+                       value="{{ subcategory.name if subcategory else '' }}" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Parent Category</label>
+                <select name="parent_id" class="form-select" required>
+                    <option value="">-- Select Parent --</option>
+                    {% for p in parents %}
+                    <option value="{{ p.id }}"
+                        {% if subcategory and subcategory.parent_id == p.id %}selected{% endif %}>
+                        {{ p.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                <textarea name="description" class="form-control" rows="3">{{ subcategory.description if subcategory else '' }}</textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Image URL</label>
+                <input type="text" name="image" class="form-control"
+                       value="{{ subcategory.image if subcategory else '' }}" placeholder="https://...">
+            </div>
+            <button type="submit" class="btn btn-dark">{{ action }}</button>
+            <a href="{{ url_for('admin.subcategories') }}" class="btn btn-outline-secondary ms-2">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

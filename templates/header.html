@@ -14,13 +14,24 @@
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About Us</a></li>
 
                 {% if session.user_id %}
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout ({{ session.user_name }})</a></li>
+                    {% if session.user_email == "demo@shopeasy.com" %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin.dashboard') }}">Admin</a>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">
+                            Logout ({{ session.user_name }})
+                        </a>
+                    </li>
                 {% else %}
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
                 {% endif %}
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Cart <span class="badge bg-light text-dark" id="cart-count">0</span></a>
+                    <a class="nav-link" href="#">
+                        Cart <span class="badge bg-light text-dark" id="cart-count">0</span>
+                    </a>
                 </li>
             </ul>
         </div>

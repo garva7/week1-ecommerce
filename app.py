@@ -11,14 +11,18 @@ Routes:
 """
 
 from flask import (
-    Flask, render_template, request, redirect, url_for, session, flash
+    Flask, render_template, request, redirect, url_for, session, flash, jsonify
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from config import Config
-from models import db, User, Category, Product
+from models import db, User, Category, Product, Enquiry
+from admin import admin
+
+
 
 app = Flask(__name__)
+app.register_blueprint(admin)
 app.config.from_object(Config)
 db.init_app(app)
 
@@ -35,19 +39,36 @@ def index():
 
 @app.route("/products")
 def products():
-    category_name = request.args.get("category")  # None when not provided
+    category_name = request.args.get("category")
+    search = request.args.get("search", "").strip()
+    page = request.args.get("page", 1, type=int)
+    per_page = 6
+
+    query = Product.query
 
     if category_name:
         category = Category.query.filter_by(name=category_name).first()
-        items = category.products if category else []
-        # Correct possessive: Men's / Women's / Kids'
+        if category:
+            # collect ids: the category itself + all its subcategories
+            ids = [category.id] + [sub.id for sub in category.subcategories]
+            query = query.filter(Product.subcategory_id.in_(ids))
         possessive = category_name + "'" if category_name.endswith("s") else category_name + "'s"
         heading = possessive + " Products"
     else:
-        items = Product.query.all()
         heading = "All Products"
 
-    return render_template("products.html", products=items, heading=heading)
+    if search:
+        query = query.filter(Product.name.ilike(f"%{search}%"))
+        heading = f'Search results for "{search}"'
+
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+
+    return render_template("products.html",
+                           products=pagination.items,
+                           heading=heading,
+                           pagination=pagination,
+                           category=category_name or "",
+                           search=search)
 
 
 @app.route("/product/<int:product_id>")
@@ -118,6 +139,7 @@ def login():
         if user and check_password_hash(user.password, password):
             session["user_id"] = user.id
             session["user_name"] = user.name
+            session["user_email"] = user.email
             flash("Welcome back, " + user.name + "!", "success")
             return redirect(url_for("index"))
 
@@ -133,6 +155,25 @@ def logout():
     flash("You have been logged out.", "success")
     return redirect(url_for("index"))
 
+@app.route("/enquiry", methods=["POST"])
+def enquiry():
+    data = request.get_json()
+
+    name = data.get("name", "").strip()
+    email = data.get("email", "").strip()
+    phone = data.get("phone", "").strip()
+    enquiry_type = data.get("type", "").strip()
+    description = data.get("description", "").strip()
+
+    if not name or not email or not phone or not enquiry_type or not description:
+        return jsonify({"success": False, "message": "All fields are required."}), 400
+
+    enq = Enquiry(name=name, email=email, phone=phone,
+                  type=enquiry_type, description=description)
+    db.session.add(enq)
+    db.session.commit()
+
+    return jsonify({"success": True, "message": "Thank you! We'll get back to you soon."})
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

@@ -1,0 +1,44 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Manage Subcategories{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Subcategories</h1>
+    <a href="{{ url_for('admin.add_subcategory') }}" class="btn btn-dark">+ Add Subcategory</a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Parent Category</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sub in subcategories %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ sub.name }}</td>
+                    <td>{{ sub.parent.name if sub.parent else '—' }}</td>
+                    <td>{{ sub.description or '—' }}</td>
+                    <td>
+                        <a href="{{ url_for('admin.edit_subcategory', id=sub.id) }}" class="btn btn-sm btn-outline-dark me-1">Edit</a>
+                        <form method="POST" action="{{ url_for('admin.delete_subcategory', id=sub.id) }}" class="d-inline"
+                              onsubmit="return confirm('Delete this subcategory?')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="text-muted text-center py-3">No subcategories found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
