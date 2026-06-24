@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}ShopEasy - Home{% endblock %}
+
+{% block content %}
+<section class="hero py-5">
+    <div class="container text-center py-4">
+        <h1 class="fw-bold">Welcome to ShopEasy</h1>
+        <p class="lead text-muted mb-4">Affordable, everyday clothing for Men, Women and Kids.</p>
+        <a href="{{ url_for('products') }}" class="btn btn-dark btn-lg me-2">Shop Now</a>
+        <button type="button" class="btn btn-outline-dark btn-lg" data-bs-toggle="modal" data-bs-target="#offerModal">
+            Get 10% Off
+        </button>
+    </div>
+</section>
+
+<section class="container py-5">
+    <h2 class="h3 mb-4">Browse Categories</h2>
+    <div class="row g-4">
+        {% for category in categories %}
+        <div class="col-12 col-md-4">
+            <div class="card category-card h-100">
+                <img src="{{ category.image }}" class="category-img card-img-top" alt="{{ category.name }}">
+                <div class="card-body">
+                    <h3 class="h5 card-title">{{ category.name }}</h3>
+                    <p class="card-text text-muted">{{ category.description }}</p>
+                    <a href="{{ url_for('products', category=category.name) }}" class="btn btn-outline-dark btn-sm">View Products</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Offer Modal (Bootstrap component) -->
+<div class="modal fade" id="offerModal" tabindex="-1" aria-labelledby="offerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="offerModalLabel">Get 10% Off Your First Order</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted">Sign up with your email and get a 10% discount on your first purchase.</p>
+                <label for="offer-email" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="offer-email" placeholder="you@example.com">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Sign Up</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

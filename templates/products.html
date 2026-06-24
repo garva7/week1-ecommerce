@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}ShopEasy - {{ heading }}{% endblock %}
+
+{% block head %}
+<!-- INTERNAL CSS: styles that only apply to this page, written in a <style> block -->
+<style>
+    .search-wrap {
+        max-width: 380px;
+        margin-bottom: 1.5rem;
+    }
+    #product-search:focus {
+        border-color: var(--brand);
+        box-shadow: 0 0 0 0.2rem rgba(13, 148, 136, 0.2);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+    <h1 class="h3 mb-4">{{ heading }}</h1>
+
+    <!-- Live search box. INLINE CSS used on the input via the style="" attribute. -->
+    <div class="search-wrap">
+        <input type="text" id="product-search" class="form-control"
+               placeholder="Search products by name..."
+               style="border: 2px solid var(--brand);">
+    </div>
+
+    <div class="row g-4" id="product-grid">
+        {% for p in products %}
+        <div class="col-6 col-md-4 col-lg-3 product-col">
+            <div class="card product-card h-100">
+                <img src="{{ p.image }}" class="card-img-top" alt="{{ p.name }}">
+                <div class="card-body d-flex flex-column">
+                    <h2 class="h6 card-title">{{ p.name }}</h2>
+                    <p class="card-text small text-muted">{{ p.description }}</p>
+                    <p class="fw-bold mb-2">Rs. {{ p.price | int }}</p>
+                    <div class="mt-auto d-grid gap-2">
+                        <a href="{{ url_for('product_detail', product_id=p.id) }}" class="btn btn-sm btn-outline-dark">View Details</a>
+                        <button class="btn btn-sm btn-dark" onclick="addToCart('{{ p.name }}')">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <p class="text-muted">No products found in this category.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Shown by JavaScript when a search matches nothing -->
+    <p id="no-results" class="text-muted d-none">No products match your search.</p>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='catalog.js') }}"></script>
+{% endblock %}
