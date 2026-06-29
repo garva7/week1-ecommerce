@@ -11,7 +11,6 @@ with app.app_context():
     db.drop_all()
     db.create_all()
 
-    # ── Top-level categories ─────────────────────────────────────────
     men = Category(name="Men", image=img("1488161628813-04466f872be2", 600),
                    description="Shirts, pants, jackets and more.")
     women = Category(name="Women", image=img("1515372039744-b8f02a3ae446", 600),
@@ -21,7 +20,6 @@ with app.app_context():
     db.session.add_all([men, women, kids])
     db.session.commit()
 
-    # ── Subcategories ────────────────────────────────────────────────
     men_shirts = Category(name="Shirts", parent_id=men.id,
                           description="Casual and formal shirts for men.")
     men_jeans = Category(name="Jeans", parent_id=men.id,
@@ -35,7 +33,6 @@ with app.app_context():
     db.session.add_all([men_shirts, men_jeans, women_dresses, women_tops, kids_hoodies])
     db.session.commit()
 
-    # ── Products (now linked to subcategories) ───────────────────────
     products = [
         Product(subcategory_id=men_shirts.id, name="White T-Shirt",
                 image=img("1521572163474-6864f9cf17ab"), price=499, stock=8,
@@ -64,7 +61,6 @@ with app.app_context():
     ]
     db.session.add_all(products)
 
-    # ── Demo user ────────────────────────────────────────────────────
     demo = User(
         name="Demo User", email="demo@shopeasy.com", phone="9999999999",
         address="123 Demo Street", password=generate_password_hash("demo123"),

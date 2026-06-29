@@ -4,7 +4,6 @@ from models import db, Category, Product
 admin = Blueprint("admin", __name__, url_prefix="/admin")
 
 
-# ── Guard: block non-admins ──────────────────────────────────────────
 from functools import wraps
 from flask import session
 
@@ -25,7 +24,6 @@ def admin_required(f):
     return decorated
 
 
-# ── Dashboard ────────────────────────────────────────────────────────
 @admin.route("/")
 @admin_required
 def dashboard():
@@ -38,7 +36,6 @@ def dashboard():
                            total_products=total_products)
 
 
-# ── Categories ───────────────────────────────────────────────────────
 @admin.route("/categories")
 @admin_required
 def categories():
@@ -90,7 +87,6 @@ def delete_category(id):
     return redirect(url_for("admin.categories"))
 
 
-# ── Subcategories ────────────────────────────────────────────────────
 @admin.route("/subcategories")
 @admin_required
 def subcategories():
@@ -151,7 +147,6 @@ def delete_subcategory(id):
     return redirect(url_for("admin.subcategories"))
 
 
-# ── Products ─────────────────────────────────────────────────────────
 @admin.route("/products")
 @admin_required
 def products():

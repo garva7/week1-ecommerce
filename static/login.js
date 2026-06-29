@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Password show/hide toggle
     const toggle = document.getElementById('toggle-password');
     const password = document.getElementById('password');
     if (toggle && password) {
@@ -14,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Form validation
     const loginForm = document.querySelector('form[action="/login"]');
     const registerForm = document.querySelector('form[action="/register"]');
 

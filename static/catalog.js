@@ -1,10 +1,6 @@
-// catalog.js - live product search (DOM manipulation).
-// Demonstrates: selecting elements, handling the "input" event, and
-// altering elements' CSS/visibility with JavaScript.
-
 document.addEventListener('DOMContentLoaded', function () {
     const search = document.getElementById('product-search');
-    if (!search) return; // not on this page
+    if (!search) return;
 
     const cards = document.querySelectorAll('#product-grid .product-col');
     const noResults = document.getElementById('no-results');
@@ -16,14 +12,13 @@ document.addEventListener('DOMContentLoaded', function () {
         cards.forEach(function (col) {
             const name = col.querySelector('.card-title').textContent.toLowerCase();
             if (name.indexOf(term) !== -1) {
-                col.style.display = '';      // show
+                col.style.display = '';
                 visibleCount++;
             } else {
-                col.style.display = 'none';  // hide
+                col.style.display = 'none';
             }
         });
 
-        // Show the "no matches" message only when nothing is visible.
         noResults.classList.toggle('d-none', visibleCount > 0);
     });
 });

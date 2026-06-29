@@ -13,14 +13,8 @@ app = Flask(__name__)
 app.register_blueprint(admin)
 app.config.from_object(Config)
 db.init_app(app)
-
-
-# ----------------------------------------------------------------------
-# Public pages
-# ----------------------------------------------------------------------
 @app.route("/")
 def index():
-    # Only top-level categories (the ones without a parent) on the homepage.
     categories = Category.query.filter_by(parent_id=None).all()
     return render_template("index.html", categories=categories)
 
@@ -37,7 +31,6 @@ def products():
     if category_name:
         category = Category.query.filter_by(name=category_name).first()
         if category:
-            # collect ids: the category itself + all its subcategories
             ids = [category.id] + [sub.id for sub in category.subcategories]
             query = query.filter(Product.subcategory_id.in_(ids))
         possessive = category_name + "'" if category_name.endswith("s") else category_name + "'s"
@@ -63,7 +56,6 @@ def products():
 def product_detail(product_id):
     product = Product.query.get_or_404(product_id)
 
-    # Calculate the discounted price (kept as whole rupees).
     discount = float(product.discount_percent or 0)
     final_price = round(float(product.price) - float(product.price) * discount / 100)
 
@@ -75,9 +67,6 @@ def about():
     return render_template("about.html")
 
 
-# ----------------------------------------------------------------------
-# Authentication
-# ----------------------------------------------------------------------
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -87,7 +76,6 @@ def register():
         address = request.form.get("address", "").strip()
         password = request.form.get("password", "")
 
-        # Server-side validation.
         error = None
         if not name or not email or not password:
             error = "Name, email and password are required."
@@ -101,7 +89,6 @@ def register():
             return render_template("register.html", name=name, email=email,
                                    phone=phone, address=address)
 
-        # Store the password as a secure hash, never as plain text.
         user = User(
             name=name, email=email, phone=phone, address=address,
             password=generate_password_hash(password),
@@ -123,7 +110,6 @@ def login():
 
         user = User.query.filter_by(email=email).first()
 
-        # check_password_hash compares the typed password to the stored hash.
         if user and check_password_hash(user.password, password):
             session["user_id"] = user.id
             session["user_name"] = user.name
@@ -139,7 +125,7 @@ def login():
 
 @app.route("/logout")
 def logout():
-    session.clear()  # destroy the session
+    session.clear()
     flash("You have been logged out.", "success")
     return redirect(url_for("index"))
 

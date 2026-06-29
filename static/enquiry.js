@@ -1,6 +1,4 @@
 $(document).ready(function () {
-
-    // Reset form and alerts every time the modal opens
     $("#enquiryModal").on("show.bs.modal", function () {
         $("#enquiry-form")[0].reset();
         $("#enquiry-alert").addClass("d-none").html("");
@@ -17,18 +15,15 @@ $(document).ready(function () {
     function validateEnquiry() {
         let valid = true;
 
-        // Clear previous errors
         $(".form-control, .form-select").removeClass("is-invalid");
         $(".invalid-feedback").text("");
 
-        // Name
         const name = $("#enq-name").val().trim();
         if (!name) {
             showError("enq-name", "err-name", "Name is required.");
             valid = false;
         }
 
-        // Email
         const email = $("#enq-email").val().trim();
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!email) {
@@ -39,7 +34,6 @@ $(document).ready(function () {
             valid = false;
         }
 
-        // Phone
         const phone = $("#enq-phone").val().trim();
         const phoneRegex = /^[0-9]{10}$/;
         if (!phone) {
@@ -50,14 +44,12 @@ $(document).ready(function () {
             valid = false;
         }
 
-        // Type
         const type = $("#enq-type").val();
         if (!type) {
             showError("enq-type", "err-type", "Please select an enquiry type.");
             valid = false;
         }
 
-        // Description
         const desc = $("#enq-description").val().trim();
         if (!desc) {
             showError("enq-description", "err-description", "Description is required.");
@@ -76,7 +68,6 @@ $(document).ready(function () {
     }
 
     function submitEnquiry() {
-        // AJAX submission — Step 7 will wire this to a real Flask route
         const data = {
             name: $("#enq-name").val().trim(),
             email: $("#enq-email").val().trim(),

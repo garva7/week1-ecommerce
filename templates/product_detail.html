@@ -12,14 +12,12 @@
             <p class="text-muted mb-2">Category: {{ product.category.name }}</p>
             <p>{{ product.description }}</p>
 
-            <!-- Price + discount (calculated in app.py) -->
             <div class="mb-3">
                 <span class="original-price me-2">Rs. {{ product.price | int }}</span>
                 <span class="h4 fw-bold text-dark">Rs. {{ final_price }}</span>
                 <span class="badge bg-success ms-2">{{ product.discount_percent }}% OFF</span>
             </div>
 
-            <!-- Stock status decided in the template from the database value -->
             <p class="mb-4">Availability:
                 {% if product.stock > 0 %}
                     <span class="badge bg-success">In Stock</span>
